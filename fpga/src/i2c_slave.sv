@@ -36,7 +36,8 @@ module i2c_slave
    logic       next_data_is_addr;
    logic       multi_cycle;
 
-   logic [2:0] stop_cnt;
+   logic [3:0] stop_cnt;
+   logic       switch_id;
    logic [7:0] slave_id;
 
    always_ff @(negedge sda_in, negedge rst_n)
@@ -100,7 +101,10 @@ module i2c_slave
          rd_en  <= 1'b0;
       end
 
-   assign slave_id = (stop_cnt == 'd6) ? 7'h10 : SLAVE_ID; // one out of 8 times will be a different slave_id
+   // two single, one double and one tripple
+   assign switch_id = (stop_cnt == 'd2)  || (stop_cnt == 'd4)  || (stop_cnt == 'd8) || (stop_cnt == 'd9) ||
+                      (stop_cnt == 'd12) || (stop_cnt == 'd13) || (stop_cnt == 'd14);
+   assign slave_id  = (switch_id) ? 7'h10 : SLAVE_ID;
 
    // it is very important to check when the st_bit_counter is equal to 8!!!!
    always_ff @(posedge scl, negedge rst_start_stop_n)
