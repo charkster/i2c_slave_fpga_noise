@@ -1,3 +1,6 @@
 * linguist-vendored
 *.sv linguist-vendored=false
 *.py linguist-vendored=false
+*.c linguist-vendored=false
+*.cpp linguist-vendored=false
+*.h linguist-vendored=false
